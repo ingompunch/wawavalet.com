@@ -98,7 +98,7 @@ export const Home = () => {
   return (
     <div className="overflow-x-hidden">
       {/* Hero Section */}
-      <section className="relative bg-slate-950 py-20 px-4">
+      <section className="relative bg-slate-950 py-20 px-6 sm:px-8">
         {/* BG Decoration */}
         <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1573348722427-f1d6819fdf98?q=80&w=2000&auto=format&fit=crop')] bg-cover bg-center opacity-30" />
         <div className="absolute inset-0 bg-gradient-to-r from-slate-950 via-slate-950/80 to-transparent" />
@@ -116,7 +116,7 @@ export const Home = () => {
                initial={{ opacity: 0, y: 20 }}
                animate={{ opacity: 1, y: 0 }}
                transition={{ delay: 0.1 }}
-               className="text-5xl md:text-7xl font-black text-white tracking-tighter leading-[1.05] whitespace-pre-wrap"
+               className="text-3xl sm:text-4xl md:text-6xl lg:text-7xl font-black text-white tracking-tight leading-tight sm:leading-[1.1] whitespace-pre-wrap"
             >
               {siteData.home.heroTitle}
             </motion.h2>
@@ -261,7 +261,7 @@ export const Home = () => {
       </section>
 
       {/* Trust Points */}
-      <section className="py-24 bg-white px-4">
+      <section className="py-24 bg-white px-6 sm:px-8">
         <div className="container mx-auto max-w-6xl">
             <div className="text-center mb-16 space-y-4">
                 <h3 className="text-4xl md:text-5xl font-black text-slate-900 tracking-tighter">
@@ -303,7 +303,7 @@ export const Home = () => {
       </section>
 
       {/* Visual Banner */}
-      <section className="px-4 mb-24">
+      <section className="px-6 sm:px-8 mb-24">
         <div className="container mx-auto max-w-6xl rounded-[3rem] bg-[#FFD500] overflow-hidden relative p-12 md:p-24 text-center">
             <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1540575467063-178a50c2df87?q=80&w=2000&auto=format&fit=crop')] bg-cover bg-center opacity-10 mix-blend-overlay" />
             <div className="relative z-10 space-y-8">
@@ -322,7 +322,7 @@ export const Home = () => {
       </section>
 
       {/* Review Section (Mocked KakaoTalk Style) */}
-      <section className="py-24 bg-slate-50 px-4">
+      <section className="py-24 bg-slate-50 px-6 sm:px-8">
         <div className="container mx-auto max-w-4xl">
             <div className="flex flex-col md:flex-row items-end justify-between mb-16 gap-6">
                 <div className="space-y-4">

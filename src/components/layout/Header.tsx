@@ -27,14 +27,14 @@ export const Header = () => {
       <div className="container mx-auto px-4 md:px-6 flex items-center justify-between">
         {/* Logo */}
         <Link to="/" className="flex items-center gap-2 group">
-          <div className="bg-[#FFD500] p-1.5 md:p-2 rounded-xl shadow-sm group-hover:rotate-6 transition-transform">
-            <Car className="text-slate-900 size-5 md:size-6" strokeWidth={2.5} />
+          <div className="bg-[#FFD500] p-1 md:p-2 rounded-lg md:rounded-xl shadow-sm group-hover:rotate-6 transition-transform">
+            <Car className="text-slate-900 size-[18px] md:size-6" strokeWidth={2.5} />
           </div>
           <div>
-            <h1 className="font-black text-lg md:text-2xl text-slate-900 tracking-tighter leading-none">
+            <h1 className="font-black text-base md:text-2xl text-slate-900 tracking-tighter leading-none">
               와와 <span className="text-[#FFB800]">주차대행</span>
             </h1>
-            <p className="text-[10px] md:text-[11px] font-bold text-slate-400 tracking-widest mt-0.5 uppercase">
+            <p className="text-[9px] md:text-[11px] font-bold text-slate-400 tracking-widest mt-0.5 uppercase">
               INCHEON AIRPORT VALET
             </p>
           </div>
@@ -80,7 +80,7 @@ export const Header = () => {
           className="lg:hidden p-2 text-slate-600"
           onClick={() => setIsOpen(!isOpen)}
         >
-          {isOpen ? <X size={28} /> : <Menu size={28} />}
+          {isOpen ? <X size={24} /> : <Menu size={24} />}
         </button>
       </div>
 

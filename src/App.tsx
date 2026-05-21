@@ -10,8 +10,9 @@ import { Fees } from './pages/Fees';
 import { FAQ } from './pages/FAQ';
 
 export default function App() {
+  const basename = window.location.hostname.includes('github.io') ? '/wawavalet.com' : '/';
   return (
-    <BrowserRouter>
+    <BrowserRouter basename={basename}>
       <Routes>
         <Route path="/" element={<Layout><Home /></Layout>} />
         <Route path="/intro" element={<Intro />} />
