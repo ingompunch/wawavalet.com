@@ -1,0 +1,6 @@
+{
+  "name": "와와 주차대행",
+  "description": "인천공항 1·2터미널 전용 실내 및 실외 안심 주차 및 프리미엄 발렛 서비스 예약 플랫폼. 24시간 CCTV 및 보험 완비.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

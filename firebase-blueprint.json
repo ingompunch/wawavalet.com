@@ -1,0 +1,46 @@
+{
+  "entities": {
+    "reservation": {
+      "title": "Reservation",
+      "description": "A parking reservation request from a customer.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "name": { "type": "string" },
+        "phone": { "type": "string" },
+        "carNumber": { "type": "string" },
+        "carModel": { "type": "string" },
+        "terminal": { "type": "string", "enum": ["T1", "T2"] },
+        "entryDate": { "type": "string" },
+        "entryTime": { "type": "string" },
+        "exitDate": { "type": "string" },
+        "exitTime": { "type": "string" },
+        "totalPrice": { "type": "number" },
+        "status": { "type": "string", "enum": ["pending", "confirmed", "cancelled"] },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["name", "phone", "carNumber", "terminal", "entryDate", "exitDate", "status"]
+    },
+    "admin": {
+      "title": "Admin",
+      "description": "User with administrative privileges.",
+      "type": "object",
+      "properties": {
+        "uid": { "type": "string" },
+        "email": { "type": "string" }
+      },
+      "required": ["uid", "email"]
+    }
+  },
+  "firestore": {
+    "reservations/{reservationId}": {
+      "schema": "reservation",
+      "description": "Parking reservations storage"
+    },
+    "admins/{adminId}": {
+      "schema": "admin",
+      "description": "Authenticated admin users"
+    }
+  }
+}
