@@ -11,7 +11,7 @@ import { FAQ } from './pages/FAQ';
 
 export default function App() {
   return (
-    <BrowserRouter basename="/wawavalet.com">
+    <BrowserRouter>
       <Routes>
         <Route path="/" element={<Layout><Home /></Layout>} />
         <Route path="/intro" element={<Intro />} />
