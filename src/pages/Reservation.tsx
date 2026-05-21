@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { db } from '../lib/firebase';
 import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
 import { Calendar, Car, Clock, Phone, User, CheckCircle2, AlertCircle } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 import { motion } from 'motion/react';
 import { formatPrice } from '../lib/utils';
 import { useSiteData } from '../lib/siteService';
@@ -9,6 +10,7 @@ import { DatePicker } from '../components/DatePicker';
 import { TimePicker } from '../components/TimePicker';
 
 export const Reservation = () => {
+  const navigate = useNavigate();
   const { data: siteData } = useSiteData();
   const [formData, setFormData] = useState({
     name: '',
@@ -116,7 +118,7 @@ export const Reservation = () => {
         </div>
         <div className="pt-10">
           <button 
-            onClick={() => window.location.href = '/'}
+            onClick={() => navigate('/')}
             className="bg-slate-900 text-white px-10 py-4 rounded-2xl font-bold text-lg hover:bg-slate-800 transition-all"
           >
             홈으로 돌아가기
