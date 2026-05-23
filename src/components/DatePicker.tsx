@@ -121,12 +121,12 @@ export const DatePicker: React.FC<DatePickerProps> = ({
       {/* Trigger Button */}
       <div
         onClick={() => setIsOpen(!isOpen)}
-        className="h-[46px] w-full bg-slate-50 border border-slate-100 rounded-xl flex items-center justify-between px-4 focus-within:ring-2 focus-within:ring-[#FFD500] cursor-pointer hover:bg-slate-100/50 transition-colors"
+        className="h-[46px] w-full bg-slate-50 border border-slate-100 rounded-xl flex items-center justify-between px-2.5 sm:px-4 focus-within:ring-2 focus-within:ring-[#FFD500] cursor-pointer hover:bg-slate-100/50 transition-colors"
       >
-        <span className="font-bold text-sm text-slate-700">
+        <span className="font-bold text-xs sm:text-sm text-slate-700 whitespace-nowrap">
           {formattedDate || placeholder}
         </span>
-        <CalendarIcon size={16} className="text-slate-400 shrink-0" />
+        <CalendarIcon size={15} className="text-slate-400 shrink-0 ml-1" />
       </div>
 
       {/* Popover Calendar */}

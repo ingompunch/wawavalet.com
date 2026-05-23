@@ -11,7 +11,7 @@ export const FAQ = () => {
     if (loading) return null;
 
     const faqsList = siteData.faqs || [];
-    const phone = siteData.phone || '010-9389-0966';
+    const phone = siteData.phone || '010-5353-4781';
 
     return (
         <Layout>

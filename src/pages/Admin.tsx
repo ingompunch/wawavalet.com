@@ -29,7 +29,7 @@ import { motion, AnimatePresence } from 'motion/react';
 
 const INITIAL_SITE_DATA = {
   reservationLink: 'https://itcha.kr',
-  phone: '010-9389-0966',
+  phone: '010-5353-4781',
   home: {
     heroTitle: '와와 주차대행\n실내·실외 맞춤형 안심 주차',
     heroSub: '인천공항 안심 주차의 기준, 실내외 맞춤형 프리미엄 발렛.\nADT 캡스 철통 보안과 전직원 탁송 보험으로 가장 안전하게 모십니다.',
@@ -54,7 +54,7 @@ const INITIAL_SITE_DATA = {
   guide: {
     outboundTitle: '출국 시 (인계 방법)',
     outboundSteps: [
-      '인천공항 도착 15분 전 010-9389-0966로 전화를 주세요.',
+      '인천공항 도착 15분 전 010-5353-4781로 전화를 주세요.',
       '각 터미널(T1, T2) 지정된 승하차 구역에서 기사님과 조인합니다.',
       '기사님과 차량 상태 확인 후 접수증을 수령하시고 즐겁게 출국하세요!'
     ],
@@ -269,7 +269,7 @@ export const Admin = () => {
                                         <input 
                                             type="text" 
                                             className="w-full bg-slate-50 border border-slate-100 rounded-2xl px-6 py-4 font-bold outline-none focus:ring-2 focus:ring-[#FFD500]"
-                                            value={siteData.phone || '010-9389-0966'}
+                                            value={siteData.phone || '010-5353-4781'}
                                             onChange={(e) => setSiteData({...siteData, phone: e.target.value})}
                                         />
                                     </div>

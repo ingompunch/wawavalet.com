@@ -20,7 +20,7 @@ export const Layout = ({ children }: LayoutProps) => {
       {/* Floating Quick Bar */}
       <div className="fixed bottom-6 right-6 z-50 flex flex-col gap-3">
         <motion.a 
-          href="tel:010-9389-0966"
+          href="tel:010-5353-4781"
           whileHover={{ scale: 1.05 }}
           whileTap={{ scale: 0.95 }}
           className="bg-slate-900 text-[#FFD500] p-4 rounded-full shadow-2xl shadow-slate-400 flex items-center justify-center group"

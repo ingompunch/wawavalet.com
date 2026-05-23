@@ -18,17 +18,24 @@ try {
     });
 
     // 2. Pre-define window.ethereum as configurable so extension scripts can safely redefine/override it
-    let ethInstance = (window as any).ethereum;
-    Object.defineProperty(window, 'ethereum', {
-      get() {
-        return ethInstance;
-      },
-      set(val) {
-        ethInstance = val;
-      },
-      configurable: true,
-      enumerable: true,
-    });
+    try {
+      const desc = Object.getOwnPropertyDescriptor(window, 'ethereum');
+      if (!desc || desc.configurable) {
+        let ethInstance = (window as any).ethereum;
+        Object.defineProperty(window, 'ethereum', {
+          get() {
+            return ethInstance;
+          },
+          set(val) {
+            ethInstance = val;
+          },
+          configurable: true,
+          enumerable: true,
+        });
+      }
+    } catch (e) {
+      // Suppress property definition failures
+    }
   }
 } catch (err) {
   // Suppress any errors that could occur during property definition

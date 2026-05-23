@@ -34,9 +34,21 @@ export const TimePicker: React.FC<TimePickerProps> = ({
   // Split current value into hour and minute
   const [selectedHour, setSelectedHour] = useState(value ? value.split(':')[0] : '10');
   const [selectedMinute, setSelectedMinute] = useState(value ? value.split(':')[1] : '00');
+  const hoursContainerRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (isOpen && hoursContainerRef.current) {
+      setTimeout(() => {
+        const activeEl = hoursContainerRef.current?.querySelector('[data-selected="true"]');
+        if (activeEl) {
+          activeEl.scrollIntoView({ block: 'center', behavior: 'auto' });
+        }
+      }, 50);
+    }
+  }, [isOpen]);
 
   const hours = Array.from({ length: 24 }, (_, i) => i.toString().padStart(2, '0'));
-  const minutes = ['00', '10', '20', '30', '40', '50'];
+  const minutes = ['00', '30'];
 
   const handleSelectHour = (h: string, e: React.MouseEvent) => {
     e.stopPropagation();
@@ -58,22 +70,22 @@ export const TimePicker: React.FC<TimePickerProps> = ({
       {/* Trigger Button */}
       <div
         onClick={() => setIsOpen(!isOpen)}
-        className="h-[46px] w-full bg-slate-50 border border-slate-100 rounded-xl flex items-center justify-between px-4 focus-within:ring-2 focus-within:ring-[#FFD500] cursor-pointer hover:bg-slate-100/50 transition-colors"
+        className="h-[46px] w-full bg-slate-50 border border-slate-100 rounded-xl flex items-center justify-between px-2.5 sm:px-4 focus-within:ring-2 focus-within:ring-[#FFD500] cursor-pointer hover:bg-slate-100/50 transition-colors"
       >
-        <span className="font-bold text-sm text-slate-700">
+        <span className="font-bold text-xs sm:text-sm text-slate-700 whitespace-nowrap">
           {value ? `${selectedHour}시 ${selectedMinute}분` : placeholder}
         </span>
-        <ClockIcon size={16} className="text-slate-400 shrink-0" />
+        <ClockIcon size={15} className="text-slate-400 shrink-0 ml-1" />
       </div>
 
       {/* Popover Clock Picker */}
       {isOpen && (
-        <div className="absolute top-[52px] right-0 z-50 bg-white border border-slate-100 rounded-2xl shadow-xl p-4 w-[310px] select-none">
-          <div className="flex gap-4">
+        <div className="absolute top-[52px] right-0 z-50 bg-white border border-slate-100 rounded-2xl shadow-xl p-4 w-[240px] select-none">
+          <div className="flex gap-3">
             {/* Hours Column */}
             <div className="flex-1 border-r border-slate-100 pr-2">
               <div className="text-[10px] font-black text-slate-400 mb-2 pl-1 select-none">시 (HOUR)</div>
-              <div className="grid grid-cols-4 gap-1 max-h-[180px] overflow-y-auto pr-1">
+              <div ref={hoursContainerRef} className="flex flex-col gap-1 max-h-[180px] overflow-y-auto pr-1 scrollbar-thin scroll-smooth">
                 {hours.map((h) => {
                   const isHourSelected = selectedHour === h;
                   return (
@@ -81,15 +93,17 @@ export const TimePicker: React.FC<TimePickerProps> = ({
                       key={h}
                       type="button"
                       onClick={(e) => handleSelectHour(h, e)}
+                      data-selected={isHourSelected ? "true" : "false"}
                       className={`
-                        h-7 rounded-lg text-xs font-semibold transition-all cursor-pointer
+                        h-7 shrink-0 rounded-lg text-xs font-semibold flex items-center justify-between px-2 transition-all cursor-pointer
                         ${isHourSelected 
                           ? "bg-slate-900 text-[#FFD500] font-bold" 
                           : "text-slate-600 hover:bg-slate-100"
                         }
                       `}
                     >
-                      {h}
+                      <span>{h}시</span>
+                      {isHourSelected && <Check size={11} className="text-[#FFD500] shrink-0" />}
                     </button>
                   );
                 })}
@@ -97,9 +111,9 @@ export const TimePicker: React.FC<TimePickerProps> = ({
             </div>
 
             {/* Minutes Column */}
-            <div className="w-[100px]">
+            <div className="w-[85px]">
               <div className="text-[10px] font-black text-slate-400 mb-2 pl-1 select-none">분 (MIN)</div>
-              <div className="flex flex-col gap-1 max-h-[180px] overflow-y-auto">
+              <div className="flex flex-col gap-1 max-h-[180px] overflow-y-auto pr-1">
                 {minutes.map((m) => {
                   const isMinuteSelected = selectedMinute === m;
                   return (
@@ -108,7 +122,7 @@ export const TimePicker: React.FC<TimePickerProps> = ({
                       type="button"
                       onClick={(e) => handleSelectMinute(m, e)}
                       className={`
-                        h-7 px-2 rounded-lg text-xs font-semibold flex items-center justify-between transition-all cursor-pointer
+                        h-7 px-2 rounded-lg text-xs font-semibold flex items-center justify-between transition-all cursor-pointer shrink-0
                         ${isMinuteSelected 
                           ? "bg-[#FFD500] text-slate-900 font-bold" 
                           : "text-slate-600 hover:bg-slate-100"
@@ -116,7 +130,7 @@ export const TimePicker: React.FC<TimePickerProps> = ({
                       `}
                     >
                       <span>{m}분</span>
-                      {isMinuteSelected && <Check size={12} className="text-slate-900" />}
+                      {isMinuteSelected && <Check size={11} className="text-slate-900 shrink-0" />}
                     </button>
                   );
                 })}

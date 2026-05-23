@@ -19,7 +19,7 @@ export const Header = () => {
   const { data: siteData } = useSiteData();
 
   const resLink = siteData.reservationLink || '/reservation';
-  const phone = siteData.phone || '010-9389-0966';
+  const phone = siteData.phone || '010-5353-4781';
   const isExternalRes = resLink.startsWith('http');
 
   return (

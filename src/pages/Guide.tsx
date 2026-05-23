@@ -11,7 +11,7 @@ export const Guide = () => {
     const guideData = siteData.guide || {
         outboundTitle: '출국 시 (인계 방법)',
         outboundSteps: [
-            '인천공항 도착 15분 전 010-9389-0966로 전화를 주세요.',
+            '인천공항 도착 15분 전 010-5353-4781로 전화를 주세요.',
             '각 터미널(T1, T2) 지정된 승하차 구역에서 기사님과 조인합니다.',
             '기사님과 차량 상태 확인 후 접수증을 수령하시고 즐겁게 출국하세요!'
         ],
@@ -23,7 +23,7 @@ export const Guide = () => {
         ]
     };
 
-    const phone = siteData.phone || '010-9389-0966';
+    const phone = siteData.phone || '010-5353-4781';
     const reservationLink = siteData.reservationLink || '/reservation';
 
     return (

@@ -22,7 +22,7 @@ export const Reservation = () => {
     entryTime: '10:00',
     exitDate: '',
     exitTime: '10:00',
-    parkingType: 'outdoor',
+    parkingType: 'indoor',
   });
   const [totalPrice, setTotalPrice] = useState<number | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -69,6 +69,7 @@ export const Reservation = () => {
       }
 
       let price = days <= 2 ? basePrice : basePrice + (days - 2) * extraDayPrice;
+
       setTotalPrice(price);
     } else {
       setTotalPrice(null);
@@ -220,8 +221,8 @@ export const Reservation = () => {
                   <label className="text-xs font-black text-slate-400 uppercase tracking-widest pl-1">주차 유형 선택</label>
                   <div className="flex gap-2">
                     {[
-                      { key: 'outdoor', label: '실외 주차' },
-                      { key: 'indoor', label: '실내 주차' }
+                      { key: 'indoor', label: '실내 주차' },
+                      { key: 'outdoor', label: '실외 주차' }
                     ].map((type) => (
                       <button
                         key={type.key}
@@ -313,6 +314,22 @@ export const Reservation = () => {
                 <span className="text-slate-400 text-xs font-bold uppercase tracking-widest">최종 예상 요금</span>
                 <div className="text-4xl font-black mt-2 text-[#FFD500]">
                   {totalPrice ? formatPrice(totalPrice) : '날짜 선택'}
+                </div>
+              </div>
+
+              {/* Service & Terminal Info Notice */}
+              <div className="mb-6 p-4 bg-white/5 rounded-2xl border border-white/10 text-[11px] text-slate-300 space-y-2 leading-snug text-left">
+                <div className="flex items-start gap-1.5">
+                  <span className="text-[#FFD500] mt-0.5">•</span>
+                  <span>주차 후 차량사진, 계기판, 자동차키, 차량보관증을 고객님께 문자, 카톡으로 전송해드립니다.</span>
+                </div>
+                <div className="flex items-start gap-1.5">
+                  <span className="text-[#FFD500] mt-0.5">•</span>
+                  <span>공항도착 30분전 전화주세요.</span>
+                </div>
+                <div className="flex items-start gap-1.5">
+                  <span className="text-[#FFD500] mt-0.5">•</span>
+                  <span className="font-extrabold text-[#FFD500]">T1, T2 금액 동일</span>
                 </div>
               </div>
 
