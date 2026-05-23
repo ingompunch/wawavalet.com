@@ -8,8 +8,8 @@ export const INITIAL_SITE_DATA = {
   home: {
     heroTitle: '와와 주차대행\n실내·실외 맞춤형 안심 주차',
     heroSub: '인천공항 안심 주차의 기준, 실내외 맞춤형 프리미엄 발렛.\nADT 캡스 철통 보안과 전직원 탁송 보험으로 가장 안전하게 모십니다.',
-    bannerText: '"약속된 주차 구역 미이행 시 100% 환불"',
-    bannerSub: '고객님이 선택하고 예약하신 주차장(실내/실외) 유형대로 정확히 주차를 이행할 것을 약속드립니다.'
+    bannerText: '"공항 도착 30분전 전화주세요."',
+    bannerSub: '주차 후 차량사진, 계기판, 자동차키, 차량보관증을 문자, 카톡으로 전송해드립니다.'
   },
   intro: {
     title: '차를 아끼는 분들을 위한\n최상의 맞춤 주차 구역',
@@ -97,15 +97,20 @@ export function sanitizeSiteData(data: any): any {
   }
 
   // Sanitize banner text and subtiltes to avoid misleading slogans
-  if (!cleaned.home.bannerText || cleaned.home.bannerText.includes('야외 주차 시') || cleaned.home.bannerText.includes('이용요금 100% 환불')) {
+  if (!cleaned.home.bannerText || 
+      cleaned.home.bannerText.includes('야외 주차 시') || 
+      cleaned.home.bannerText.includes('이용요금 100% 환불') || 
+      cleaned.home.bannerText.includes('100% 환불') || 
+      cleaned.home.bannerText.includes('약속된 주차 구역')) {
     cleaned.home.bannerText = INITIAL_SITE_DATA.home.bannerText;
   }
 
-  if (!cleaned.home.bannerSub || cleaned.home.bannerSub.includes('야외 주차') || cleaned.home.bannerSub.includes('계기판')) {
-    // If it mentions "photo transfer" or "100% refund", keep it aligned with correct promises or just clean it up if it mentions refund
-    if (cleaned.home.bannerSub.includes('환불')) {
-      cleaned.home.bannerSub = INITIAL_SITE_DATA.home.bannerSub;
-    }
+  if (!cleaned.home.bannerSub || 
+      cleaned.home.bannerSub.includes('야외 주차') || 
+      cleaned.home.bannerSub.includes('선택하고 예약하신') || 
+      cleaned.home.bannerSub.includes('환불') || 
+      cleaned.home.bannerSub.includes('유형대로 정확히')) {
+    cleaned.home.bannerSub = INITIAL_SITE_DATA.home.bannerSub;
   }
 
   // Ensure phone number is fully corrected even if loaded from old DB records
