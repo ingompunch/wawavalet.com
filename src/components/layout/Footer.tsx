@@ -40,7 +40,7 @@ export const Footer = () => {
               </div>
               <div className="flex items-start gap-2 bg-slate-800/50 p-3 rounded-xl border border-slate-700">
                 <MapPin size={16} className="text-[#FFD500] shrink-0 mt-0.5" />
-                <p className="text-[11px] leading-snug">실내·실외 전용 주차장 운영</p>
+                <p className="text-[11px] leading-snug">실내·야외 전용 주차장 운영</p>
               </div>
             </div>
           </div>

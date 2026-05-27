@@ -62,6 +62,23 @@ export const Home = () => {
             // Apply fee logic: if days <= 2 basePrice, then basePrice + additional days
             let price = days <= 2 ? basePrice : basePrice + (days - 2) * extraDayPrice;
 
+            // 새벽/야간 할증: 입차/출차 각각 5시 이전 2만원 추가, 19시 이후 2만원 추가 (05시 정각은 포함하지 않음)
+            const entryHour = parseInt(entryTime.split(':')[0], 10);
+            const exitHour = parseInt(exitTime.split(':')[0], 10);
+            
+            if (entryHour < 5) {
+                price += 20000;
+            }
+            if (entryHour >= 19) {
+                price += 20000;
+            }
+            if (exitHour < 5) {
+                price += 20000;
+            }
+            if (exitHour >= 19) {
+                price += 20000;
+            }
+
             setTotalPrice(price);
         } else {
             setTotalPrice(null);
@@ -205,7 +222,7 @@ export const Home = () => {
                                                     : "bg-slate-50 text-slate-400 border-slate-100 hover:bg-slate-100"
                                             )}
                                         >
-                                            실외 주차
+                                            야외 주차
                                         </button>
                                     </div>
                                 </div>
@@ -230,6 +247,10 @@ export const Home = () => {
                                     <div className="flex items-start gap-1.5 leading-snug">
                                         <span className="text-[#FFB800] mt-0.5 font-bold">•</span>
                                         <span className="break-keep">공항도착 30분전 전화주세요.</span>
+                                    </div>
+                                    <div className="flex items-start gap-1.5 leading-snug">
+                                        <span className="text-[#FFB800] mt-0.5 font-bold">•</span>
+                                        <span className="font-extrabold text-[#FF6600]">새벽/야간 할증: 입·출차 각각 05시 이전 혹은 19시 이후 시 각 2만원 추가 (05시 정각 제외)</span>
                                     </div>
                                     <div className="flex items-start gap-1.5 leading-snug">
                                         <span className="text-[#FFB800] mt-0.5 font-bold">•</span>
@@ -268,7 +289,7 @@ export const Home = () => {
                             </div>
                             <div className="space-y-1 sm:space-y-3 text-left">
                                 <h4 className="text-lg sm:text-2xl font-black text-slate-900">맞춤식 안심 주차 구역</h4>
-                                <p className="text-slate-500 text-xs sm:text-base leading-relaxed font-semibold break-keep">안전하고 경제적인 실외 주차장부터 쾌적한 실내 타워 주차장까지 기호와 예산에 적합한 맞춤 주차 서비스를 합리적으로 제공합니다.</p>
+                                <p className="text-slate-500 text-xs sm:text-base leading-relaxed font-semibold break-keep">안전하고 경제적인 야외 주차장부터 쾌적한 실내 타워 주차장까지 기호와 예산에 적합한 맞춤 주차 서비스를 합리적으로 제공합니다.</p>
                             </div>
                         </div>
                         <div className="flex sm:flex-col items-start gap-4 sm:gap-6 group">
@@ -299,8 +320,8 @@ export const Home = () => {
                     <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1540575467063-178a50c2df87?q=80&w=2000&auto=format&fit=crop')] bg-cover bg-center opacity-10 mix-blend-overlay" />
                     <div className="relative z-10 space-y-4 sm:space-y-8">
                         <div className="inline-block bg-slate-900 text-white px-3.5 py-1.5 rounded-full text-[10px] sm:text-xs font-black tracking-widest">REAL PROMISE</div>
-                        <h3 className="text-2xl sm:text-4xl md:text-6xl font-black text-slate-900 tracking-tighter leading-tight sm:leading-none italic break-keep">{siteData.home.bannerText}</h3>
-                        <p className="text-slate-800 text-xs sm:text-lg md:text-xl font-black max-w-2xl mx-auto opacity-90 tracking-tight break-keep">
+                        <h3 className="text-lg sm:text-2xl md:text-4xl lg:text-[2.5rem] font-black text-slate-900 tracking-tight leading-snug lg:leading-tight italic break-keep">{siteData.home.bannerText}</h3>
+                        <p className="text-slate-800 text-xs sm:text-base md:text-lg font-black max-w-2xl mx-auto opacity-90 tracking-tight break-keep">
                             {siteData.home.bannerSub}
                         </p>
                         <div className="pt-2 sm:pt-4">
@@ -374,7 +395,7 @@ export const Home = () => {
                                     <span className="block text-[10px] sm:text-xs font-extrabold text-[#3a3a3a] pl-0.5">비즈니스맨_이준호</span>
                                     <div className="flex items-end gap-1.5">
                                         <div className="bg-white text-slate-900 rounded-2xl rounded-tl-none px-3.5 py-2.5 sm:px-4 sm:py-3 text-xs sm:text-[13px] leading-relaxed font-semibold shadow-sm border border-white/50 text-left break-keep">
-                                            장기 출장이라 가격 고민했는데, 실외 주차 옵션 생겨서 너무 좋네요! 가성비 최고입니다. 다음에 또 이용할게요!
+                                            장기 출장이라 가격 고민했는데, 야외 주차 옵션 생겨서 너무 좋네요! 가성비 최고입니다. 다음에 또 이용할게요!
                                         </div>
                                         <span className="text-[8px] sm:text-[9px] font-semibold text-slate-500 shrink-0 mb-1">오후 2:15</span>
                                     </div>

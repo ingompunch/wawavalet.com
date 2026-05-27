@@ -35,7 +35,7 @@ export const Fees = () => {
                     <div className="bg-white rounded-[2.5rem] shadow-sm border border-slate-100 overflow-hidden">
                         <div className="bg-[#FFD500] p-8">
                             <h3 className="text-2xl font-black text-slate-900 flex items-center gap-2">
-                                <Calculator size={24} /> 실외 / 실내 맞춤 주차 요금표
+                                <Calculator size={24} /> 야외 / 실내 맞춤 주차 요금표
                             </h3>
                             <p className="text-slate-800 font-bold opacity-70 text-sm mt-1">인천공항 제1·2터미널 동일 요금 및 대리주차(발렛)비 무료 적용</p>
                         </div>
@@ -44,7 +44,7 @@ export const Fees = () => {
                                 <thead>
                                     <tr className="bg-slate-50 border-b border-slate-200">
                                         <th className="p-4 text-xs font-black text-slate-400 uppercase tracking-widest border-r border-slate-100 w-1/3">주차 기간</th>
-                                        <th className="p-4 text-xs font-black text-slate-400 uppercase tracking-widest border-r border-slate-100 w-1/3">실외 주차 요금</th>
+                                        <th className="p-4 text-xs font-black text-slate-400 uppercase tracking-widest border-r border-slate-100 w-1/3">야외 주차 요금</th>
                                         <th className="p-4 text-xs font-black text-slate-400 uppercase tracking-widest w-1/3">실내 주차 요금</th>
                                     </tr>
                                 </thead>

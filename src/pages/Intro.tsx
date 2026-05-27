@@ -16,7 +16,7 @@ export const Intro = () => {
                     <h2 className="text-4xl md:text-6xl font-black italic tracking-tighter mb-4">
                         PARKING <span className="text-[#FFD500] not-italic">SPACE</span>
                     </h2>
-                    <p className="text-slate-400 font-bold">와와 주차대행의 쾌적한 실내 및 실외 주차 시설을 소개합니다.</p>
+                    <p className="text-slate-400 font-bold">와와 주차대행의 쾌적한 실내 및 야외 주차 시설을 소개합니다.</p>
                 </section>
 
                 <div className="container mx-auto max-w-6xl py-20 px-4">

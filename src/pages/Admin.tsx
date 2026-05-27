@@ -31,14 +31,14 @@ const INITIAL_SITE_DATA = {
   reservationLink: 'https://itcha.kr',
   phone: '010-5353-4781',
   home: {
-    heroTitle: '와와 주차대행\n실내·실외 맞춤형 안심 주차',
-    heroSub: '인천공항 안심 주차의 기준, 실내외 맞춤형 프리미엄 발렛.\nADT 캡스 철통 보안과 전직원 탁송 보험으로 가장 안전하게 모십니다.',
+    heroTitle: '와와 주차대행\n실내·야외 맞춤형 안심 주차',
+    heroSub: '인천공항 안심 주차의 기준, 실내·야외 맞춤형 프리미엄 발렛.\nADT 캡스 철통 보안과 전직원 탁송 보험으로 가장 안전하게 모십니다.',
     bannerText: '"주차 후 차량사진, 계기판, 자동차키, 차량보관증을 문자, 카톡으로 전송해드립니다."',
     bannerSub: '공항 도착 30분전 전화주세요.'
   },
   intro: {
     title: '차를 아끼는 분들을 위한\n최상의 맞춤 주차 구역',
-    content: '외부 오염물질, 기상 악화, 그리고 타인에 의한 문콕 사고로부터 고객님의 차량을 완벽하게 보호합니다. 와와 주차대행은 공항 인근 최신식 실내 주차 타워와 안전하게 확보된 실외 전용 주차장을 함께 제공합니다.',
+    content: '외부 오염물질, 기상 악화, 그리고 타인에 의한 문콕 사고로부터 고객님의 차량을 완벽하게 보호합니다. 와와 주차대행은 공항 인근 최신식 실내 주차 타워와 안전하게 확보된 야외 전용 주차장을 함께 제공합니다.',
     bullets: [
       '100% 지능형 자가 주차 및 대리 주차 시스템',
       '사계절 적정 온도 및 습도 관리',
@@ -89,7 +89,7 @@ const INITIAL_SITE_DATA = {
     },
     { 
       q: '외부 차량 방치 걱정은 없나요?', 
-      a: '와와 주차대행은 안전한 실내 주차타워와 전용 실외 차고지를 함께 운영하며, 고객님이 직접 선택하신 구역에 정직하게 주차됩니다. 또한 주차 완료 시점에 차량 계기판과 주차 구역 사진을 촬영하여 고객님 휴대폰 문자로 실시간 전송해 드리므로 타사의 야외 무단 주차 방치 등의 우려 없이 100% 안심하셔도 됩니다.' 
+      a: '와와 주차대행은 안전한 실내 주차타워와 전용 야외 차고지를 함께 운영하며, 고객님이 직접 선택하신 구역에 정직하게 주차됩니다. 또한 주차 완료 시점에 차량 계기판과 주차 구역 사진을 촬영하여 고객님 휴대폰 문자로 실시간 전송해 드리므로 타사의 야외 무단 주차 방치 등의 우려 없이 100% 안심하셔도 됩니다.' 
     },
     { 
       q: '결제는 언제 하는 건가요?', 
@@ -572,10 +572,10 @@ export const Admin = () => {
                                     </h4>
                                     
                                     <div className="space-y-6">
-                                        <p className="text-sm font-black text-slate-800 border-b border-slate-100 pb-2">실외 주차 요금 체계</p>
+                                        <p className="text-sm font-black text-slate-800 border-b border-slate-100 pb-2">야외 주차 요금 체계</p>
                                         <div className="grid md:grid-cols-2 gap-8">
                                             <div className="space-y-2">
-                                                <label className="text-sm font-black text-slate-900 pl-1">실외 기본 요금 (1~2일 총액)</label>
+                                                <label className="text-sm font-black text-slate-900 pl-1">야외 기본 요금 (1~2일 총액)</label>
                                                 <input 
                                                     type="number"
                                                     className="w-full bg-slate-50 border border-slate-100 rounded-2xl px-6 py-4 font-bold outline-none focus:ring-2 focus:ring-[#FFD500]"
@@ -590,7 +590,7 @@ export const Admin = () => {
                                                 />
                                             </div>
                                             <div className="space-y-2">
-                                                <label className="text-sm font-black text-slate-900 pl-1">실외 추가 요금 (3일째부터 1일당)</label>
+                                                <label className="text-sm font-black text-slate-900 pl-1">야외 추가 요금 (3일째부터 1일당)</label>
                                                 <input 
                                                     type="number"
                                                     className="w-full bg-slate-50 border border-slate-100 rounded-2xl px-6 py-4 font-bold outline-none focus:ring-2 focus:ring-[#FFD500]"

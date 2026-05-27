@@ -70,6 +70,23 @@ export const Reservation = () => {
 
       let price = days <= 2 ? basePrice : basePrice + (days - 2) * extraDayPrice;
 
+       // 새벽/야간 할증: 입차/출차 각각 5시 이전 2만원 추가, 19시 이후 2만원 추가 (05시 정각은 포함하지 않음)
+      const entryHour = parseInt(formData.entryTime.split(':')[0], 10);
+      const exitHour = parseInt(formData.exitTime.split(':')[0], 10);
+      
+      if (entryHour < 5) {
+        price += 20000;
+      }
+      if (entryHour >= 19) {
+        price += 20000;
+      }
+      if (exitHour < 5) {
+        price += 20000;
+      }
+      if (exitHour >= 19) {
+        price += 20000;
+      }
+
       setTotalPrice(price);
     } else {
       setTotalPrice(null);
@@ -222,7 +239,7 @@ export const Reservation = () => {
                   <div className="flex gap-2">
                     {[
                       { key: 'indoor', label: '실내 주차' },
-                      { key: 'outdoor', label: '실외 주차' }
+                      { key: 'outdoor', label: '야외 주차' }
                     ].map((type) => (
                       <button
                         key={type.key}
@@ -305,7 +322,7 @@ export const Reservation = () => {
                  <div className="flex justify-between items-center text-sm">
                   <span className="text-slate-400 font-bold">주차 타입</span>
                   <span className="font-black text-green-400">
-                    {formData.parkingType === 'outdoor' ? '실외 주차' : '실내 주차'}
+                    {formData.parkingType === 'outdoor' ? '야외 주차' : '실내 주차'}
                   </span>
                 </div>
               </div>
@@ -326,6 +343,10 @@ export const Reservation = () => {
                 <div className="flex items-start gap-1.5">
                   <span className="text-[#FFD500] mt-0.5">•</span>
                   <span>공항도착 30분전 전화주세요.</span>
+                </div>
+                <div className="flex items-start gap-1.5">
+                  <span className="text-[#FFD500] mt-0.5">•</span>
+                  <span className="font-extrabold text-[#FFD500]">새벽/야간 할증: 입·출차 각각 05시 이전 혹은 19시 이후 시 각 2만원 추가 (05시 정각 제외)</span>
                 </div>
                 <div className="flex items-start gap-1.5">
                   <span className="text-[#FFD500] mt-0.5">•</span>
