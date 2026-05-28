@@ -1,7 +1,22 @@
 import tailwindcss from '@tailwindcss/vite';
 import react from '@vitejs/plugin-react';
 import path from 'path';
+import fs from 'fs';
 import {defineConfig} from 'vite';
+
+const configPath = path.resolve(__dirname, 'firebase-applet-config.json');
+if (!fs.existsSync(configPath)) {
+  fs.writeFileSync(configPath, JSON.stringify({
+    projectId: 'dummy-project-id',
+    appId: 'dummy-app-id',
+    apiKey: 'dummy-api-key',
+    authDomain: 'dummy-auth-domain',
+    firestoreDatabaseId: 'dummy-db-id',
+    storageBucket: 'dummy-storage-bucket',
+    messagingSenderId: 'dummy-messaging-sender-id',
+    measurementId: ''
+  }, null, 2));
+}
 
 export default defineConfig(({ command }) => {
   return {
