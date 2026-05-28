@@ -33,20 +33,27 @@ export const Home = () => {
     }, [entryDate, entryTime, exitDate, exitTime, parkingType, siteData]);
 
     const calculate = () => {
-        const start = new Date(`${entryDate}T${entryTime}`);
-        const end = new Date(`${exitDate}T${exitTime}`);
-        
-        if (isNaN(start.getTime()) || isNaN(end.getTime())) {
+        if (!entryDate || !exitDate) {
             setTotalPrice(null);
             return;
         }
 
-        const diffTime = end.getTime() - start.getTime();
-        const diffDays = Math.ceil(diffTime / 86400000);
+        const startParts = entryDate.split('-').map(Number);
+        const endParts = exitDate.split('-').map(Number);
         
-        if (diffDays >= 0 && siteData) {
-            let days = diffDays;
-            if (days < 1) days = 1;
+        if (startParts.length !== 3 || endParts.length !== 3 || startParts.some(isNaN) || endParts.some(isNaN)) {
+            setTotalPrice(null);
+            return;
+        }
+
+        const start = new Date(startParts[0], startParts[1] - 1, startParts[2], 12, 0, 0);
+        const end = new Date(endParts[0], endParts[1] - 1, endParts[2], 12, 0, 0);
+
+        const dateDiffTime = end.getTime() - start.getTime();
+        const diffDays = Math.round(dateDiffTime / 86400000) + 1;
+        
+        if (diffDays >= 1 && siteData) {
+            const days = diffDays;
 
             let basePrice = 40000;
             let extraDayPrice = 5000;
@@ -161,7 +168,38 @@ export const Home = () => {
                                 <Clock size={16} className="text-slate-900 opacity-60 sm:size-5" />
                             </div>
                             <div className="p-4 sm:p-8 space-y-4 sm:space-y-6">
-                                <div className="grid grid-cols-2 gap-x-3 sm:gap-x-4 gap-y-3 sm:gap-y-4">
+                                {/* 주차 타입 선택 */}
+                                <div className="space-y-1.5 sm:space-y-2">
+                                    <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest pl-1">주차 유형 선택</label>
+                                    <div className="flex gap-2">
+                                        <button
+                                            type="button"
+                                            onClick={() => setParkingType('indoor')}
+                                            className={cn(
+                                                "flex-1 py-2.5 sm:py-3 px-3 sm:px-4 rounded-xl text-xs font-black transition-all border",
+                                                parkingType === 'indoor'
+                                                    ? "bg-slate-900 text-[#FFD500] border-slate-900 shadow-md"
+                                                    : "bg-slate-50 text-slate-400 border-slate-100 hover:bg-slate-100"
+                                            )}
+                                        >
+                                            실내 주차
+                                        </button>
+                                        <button
+                                            type="button"
+                                            onClick={() => setParkingType('outdoor')}
+                                            className={cn(
+                                                "flex-1 py-2.5 sm:py-3 px-3 sm:px-4 rounded-xl text-xs font-black transition-all border",
+                                                parkingType === 'outdoor'
+                                                    ? "bg-slate-900 text-[#FFD500] border-slate-900 shadow-md"
+                                                    : "bg-slate-50 text-slate-400 border-slate-100 hover:bg-slate-100"
+                                            )}
+                                        >
+                                            야외 주차
+                                        </button>
+                                    </div>
+                                </div>
+
+                                <div className="grid grid-cols-2 gap-x-3 sm:gap-x-4 gap-y-3 sm:gap-y-4 pt-1 border-t border-slate-50">
                                     <div className="space-y-1.5 sm:space-y-2">
                                         <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest pl-1">입차 예정일</label>
                                         <DatePicker 
@@ -193,37 +231,6 @@ export const Home = () => {
                                             onChange={setExitTime}
                                             placeholder="시간 선택"
                                         />
-                                    </div>
-                                </div>
-
-                                {/* 주차 타입 선택 */}
-                                <div className="space-y-1.5 sm:space-y-2 pt-0.5">
-                                    <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest pl-1">주차 유형 선택</label>
-                                    <div className="flex gap-2">
-                                        <button
-                                            type="button"
-                                            onClick={() => setParkingType('indoor')}
-                                            className={cn(
-                                                "flex-1 py-2.5 sm:py-3 px-3 sm:px-4 rounded-xl text-xs font-black transition-all border",
-                                                parkingType === 'indoor'
-                                                    ? "bg-slate-900 text-[#FFD500] border-slate-900 shadow-md"
-                                                    : "bg-slate-50 text-slate-400 border-slate-100 hover:bg-slate-100"
-                                            )}
-                                        >
-                                            실내 주차
-                                        </button>
-                                        <button
-                                            type="button"
-                                            onClick={() => setParkingType('outdoor')}
-                                            className={cn(
-                                                "flex-1 py-2.5 sm:py-3 px-3 sm:px-4 rounded-xl text-xs font-black transition-all border",
-                                                parkingType === 'outdoor'
-                                                    ? "bg-slate-900 text-[#FFD500] border-slate-900 shadow-md"
-                                                    : "bg-slate-50 text-slate-400 border-slate-100 hover:bg-slate-100"
-                                            )}
-                                        >
-                                            야외 주차
-                                        </button>
                                     </div>
                                 </div>
 

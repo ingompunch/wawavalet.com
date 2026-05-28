@@ -42,20 +42,27 @@ export const Reservation = () => {
   ]);
 
   const calculatePrice = () => {
-    const start = new Date(`${formData.entryDate}T${formData.entryTime}`);
-    const end = new Date(`${formData.exitDate}T${formData.exitTime}`);
-    
-    if (isNaN(start.getTime()) || isNaN(end.getTime())) {
+    if (!formData.entryDate || !formData.exitDate) {
       setTotalPrice(null);
       return;
     }
 
-    const diffTime = end.getTime() - start.getTime();
-    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+    const startParts = formData.entryDate.split('-').map(Number);
+    const endParts = formData.exitDate.split('-').map(Number);
+    
+    if (startParts.length !== 3 || endParts.length !== 3 || startParts.some(isNaN) || endParts.some(isNaN)) {
+      setTotalPrice(null);
+      return;
+    }
 
-    if (diffDays >= 0 && siteData) {
-      let days = diffDays;
-      if (days < 1) days = 1;
+    const start = new Date(startParts[0], startParts[1] - 1, startParts[2], 12, 0, 0);
+    const end = new Date(endParts[0], endParts[1] - 1, endParts[2], 12, 0, 0);
+
+    const dateDiffTime = end.getTime() - start.getTime();
+    const diffDays = Math.round(dateDiffTime / (1000 * 60 * 60 * 24)) + 1;
+
+    if (diffDays >= 1 && siteData) {
+      const days = diffDays;
 
       let basePrice = 40000;
       let extraDayPrice = 5000;
