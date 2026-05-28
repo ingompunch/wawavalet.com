@@ -6,22 +6,36 @@
     <title>와와 주차대행 - 인천공항 실내·실외 안심 주차 프리미엄 발렛</title>
     <script>
       // Early error handler to ignore specific browser extension insertion errors (e.g. MetaMask, Rabby etc.)
+      // and benign development environment WebSocket/HMR disconnect errors.
       (function() {
         var suppressError = function(msg) {
-          return msg && (msg.indexOf('ethereum') !== -1 || msg.indexOf('Cannot redefine property: ethereum') !== -1);
+          if (!msg) return false;
+          var str = String(msg).toLowerCase();
+          return (
+            str.indexOf('ethereum') !== -1 || 
+            str.indexOf('cannot redefine property: ethereum') !== -1 ||
+            str.indexOf('websocket') !== -1 ||
+            str.indexOf('web socket') !== -1 ||
+            str.indexOf('failed to connect') !== -1 ||
+            str.indexOf('vite') !== -1
+          );
         };
+
         window.addEventListener('error', function(event) {
-          if (suppressError(event.message)) {
+          if (suppressError(event.message || event.filename)) {
             event.stopImmediatePropagation();
             event.preventDefault();
           }
         }, true);
+
         window.addEventListener('unhandledrejection', function(event) {
-          var reasonMsg = (event.reason && event.reason.message) || '';
+          var reasonMsg = (event.reason && (event.reason.message || event.reason)) || '';
           if (suppressError(reasonMsg)) {
+            event.stopImmediatePropagation();
             event.preventDefault();
           }
         });
+
         // Override window.onerror as a backup
         var originalOnError = window.onerror;
         window.onerror = function(message, source, lineno, colno, error) {
@@ -32,6 +46,27 @@
           if (originalOnError) {
             return originalOnError.apply(this, arguments);
           }
+        };
+
+        // Suppress console.error and console.warn for known benign websocket/vite errors
+        var originalConsoleError = console.error;
+        console.error = function() {
+          var args = Array.prototype.slice.call(arguments);
+          var matches = args.some(function(arg) {
+            return suppressError(String(arg));
+          });
+          if (matches) return;
+          originalConsoleError.apply(console, arguments);
+        };
+
+        var originalConsoleWarn = console.warn;
+        console.warn = function() {
+          var args = Array.prototype.slice.call(arguments);
+          var matches = args.some(function(arg) {
+            return suppressError(String(arg));
+          });
+          if (matches) return;
+          originalConsoleWarn.apply(console, arguments);
         };
       })();
     </script>
