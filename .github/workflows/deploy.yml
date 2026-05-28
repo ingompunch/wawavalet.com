@@ -30,11 +30,24 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 20
-          cache: npm
 
       - name: Install and Build 🔧
+        env:
+          CI: false
         run: |
-          npm install
+          echo "=== Node & NPM Version ==="
+          node -v
+          npm -v
+          
+          echo "=== Installing Dependencies ==="
+          npm install --include=dev --legacy-peer-deps
+          
+          echo "=== Checking Installed Binaries ==="
+          npx tsc --version || echo "tsc not found"
+          npx vite --version || echo "vite not found"
+          npx esbuild --version || echo "esbuild not found"
+          
+          echo "=== Building Application ==="
           npm run build
 
       - name: Setup Pages ⚙️
