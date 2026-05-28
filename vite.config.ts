@@ -4,7 +4,7 @@ import path from 'path';
 import fs from 'fs';
 import {defineConfig} from 'vite';
 
-const configPath = path.resolve(__dirname, 'firebase-applet-config.json');
+const configPath = path.resolve(process.cwd(), 'firebase-applet-config.json');
 if (!fs.existsSync(configPath)) {
   fs.writeFileSync(configPath, JSON.stringify({
     projectId: 'dummy-project-id',
@@ -24,7 +24,7 @@ export default defineConfig(({ command }) => {
     plugins: [react(), tailwindcss()],
     resolve: {
       alias: {
-        '@': path.resolve(__dirname, '.'),
+        '@': path.resolve(process.cwd(), '.'),
       },
     },
     server: {
