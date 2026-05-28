@@ -20,7 +20,7 @@ if (!fs.existsSync(configPath)) {
 
 export default defineConfig(({ command }) => {
   return {
-    base: command === 'serve' ? '/' : '/wawavalet.com/',
+    base: '/',
     plugins: [react(), tailwindcss()],
     resolve: {
       alias: {
