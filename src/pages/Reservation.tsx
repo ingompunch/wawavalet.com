@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { db, auth } from '../lib/firebase';
-import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
+import { collection, addDoc, serverTimestamp, Timestamp } from 'firebase/firestore';
 import { 
   Car, 
   User, 
@@ -323,18 +323,32 @@ export const Reservation = () => {
     const exitHour24 = convertTo24Hour(formData.exitAmPm, formData.exitHour);
     const finalExitTimeStr = `${exitHour24.toString().padStart(2, '0')}:${formData.exitMin}`;
 
+    const entryDateStr = `${formData.entryDate}T${finalEntryTimeStr}:00`;
+    let entryDateObj = new Date(entryDateStr);
+    if (isNaN(entryDateObj.getTime())) {
+      entryDateObj = new Date(formData.entryDate);
+    }
+    const entryTimestamp = Timestamp.fromDate(entryDateObj);
+
+    const exitDateStr = `${formData.exitDate}T${finalExitTimeStr}:00`;
+    let exitDateObj = new Date(exitDateStr);
+    if (isNaN(exitDateObj.getTime())) {
+      exitDateObj = new Date(formData.exitDate);
+    }
+    const exitTimestamp = Timestamp.fromDate(exitDateObj);
+
     const submissionPayload = {
       name: formData.name,
       phone: formData.phone,
       carNumber: formData.carNumber,
       carModel: formData.carModel,
       parkingType: formData.parkingType,
-      entryDate: formData.entryDate,
+      entryDate: entryTimestamp,
       entryTime: finalEntryTimeStr,
       entryTerminal: formData.entryTerminal,
       entryAirline: formData.entryAirline,
       entryFlight: formData.entryFlight,
-      exitDate: formData.exitDate,
+      exitDate: exitTimestamp,
       exitTime: finalExitTimeStr,
       exitTerminal: formData.exitTerminal,
       exitAirline: formData.exitAirline,
