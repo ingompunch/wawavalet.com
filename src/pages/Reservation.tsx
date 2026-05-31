@@ -323,18 +323,30 @@ export const Reservation = () => {
     const exitHour24 = convertTo24Hour(formData.exitAmPm, formData.exitHour);
     const finalExitTimeStr = `${exitHour24.toString().padStart(2, '0')}:${formData.exitMin}`;
 
+    const ensureYYYYMMDD = (dateStr: string): string => {
+      if (!dateStr) return '';
+      const parts = dateStr.trim().split(/[-/.]/);
+      if (parts.length === 3) {
+        const y = parts[0].trim();
+        const m = parts[1].trim().padStart(2, '0');
+        const d = parts[2].trim().padStart(2, '0');
+        return `${y}-${m}-${d}`;
+      }
+      return dateStr.trim();
+    };
+
     const submissionPayload = {
       name: formData.name,
       phone: formData.phone,
       carNumber: formData.carNumber,
       carModel: formData.carModel,
       parkingType: formData.parkingType,
-      departureDate: formData.entryDate,
+      departureDate: ensureYYYYMMDD(formData.entryDate),
       departureTime: finalEntryTimeStr,
       entryTerminal: formData.entryTerminal,
       entryAirline: formData.entryAirline,
       entryFlight: formData.entryFlight,
-      arrivalDate: formData.exitDate,
+      arrivalDate: ensureYYYYMMDD(formData.exitDate),
       arrivalTime: finalExitTimeStr,
       exitTerminal: formData.exitTerminal,
       exitAirline: formData.exitAirline,
@@ -343,7 +355,8 @@ export const Reservation = () => {
       notes: formData.notes,
       password: formData.password,
       totalPrice: totalPrice,
-      status: '입고예정', // Status requirement set to B2B expected state
+      status: 'pending', // Set to 'pending' as requested by B2B dashboard
+      companyId: 'wawa', // Store company identifier for routing
       createdAt: new Date().toISOString(),
     };
 
