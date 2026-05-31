@@ -23,13 +23,12 @@ service cloud.firestore {
     }
 
     function isValidReservation(data) {
-      return data.name is string && data.name.size() <= 100 &&
-             data.phone is string && data.phone.size() <= 20 &&
-             data.carNumber is string && data.carNumber.size() <= 20 &&
-             data.terminal in ['T1', 'T2'] &&
+      return data.name is string && data.name.size() <= 150 &&
+             data.phone is string && data.phone.size() <= 50 &&
+             data.carNumber is string && data.carNumber.size() <= 50 &&
              data.entryDate is string &&
              data.exitDate is string &&
-             data.status in ['pending', 'confirmed', 'cancelled'];
+             data.status in ['pending', 'confirmed', 'cancelled', '입고예정', '입고완료', '출고완료', '취소'];
     }
 
     // Site Settings: Public read, Admin write
@@ -41,7 +40,7 @@ service cloud.firestore {
     // Reservations: Public create, Admin read/write
     match /reservations/{reservationId} {
       allow create: if isValidReservation(request.resource.data) && 
-                      request.resource.data.status == 'pending';
+                      (request.resource.data.status == 'pending' || request.resource.data.status == '입고예정');
       allow read, list, update, delete: if isAdmin();
     }
 

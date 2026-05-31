@@ -43,15 +43,10 @@ export const Header = () => {
         {/* Desktop Nav */}
         <nav className="hidden lg:flex items-center gap-10">
           {NAV_ITEMS.map((item) => {
-              const isRes = item.path === '/reservation';
-              const targetPath = isRes && isExternalRes ? resLink : item.path;
-              const LinkElem = isRes && isExternalRes ? 'a' : Link;
-
               return (
-                <LinkElem
+                <Link
                   key={item.path}
-                  to={(targetPath as any)}
-                  href={(targetPath as any)}
+                  to={item.path}
                   className={cn(
                     "text-[15px] font-bold transition-all hover:text-slate-900 relative py-1",
                     location.pathname === item.path ? "text-slate-900" : "text-slate-500"
@@ -64,7 +59,7 @@ export const Header = () => {
                       className="absolute -bottom-1 left-0 right-0 h-0.5 bg-[#FFD500]" 
                     />
                   )}
-                </LinkElem>
+                </Link>
               );
           })}
           <a
@@ -94,21 +89,16 @@ export const Header = () => {
             className="fixed inset-0 top-16 bg-white z-40 lg:hidden p-6 flex flex-col gap-6"
           >
             {NAV_ITEMS.map((item) => {
-              const isRes = item.path === '/reservation';
-              const targetPath = isRes && isExternalRes ? resLink : item.path;
-              const LinkElem = isRes && isExternalRes ? 'a' : Link;
-
               return (
-                <LinkElem
+                <Link
                   key={item.path}
-                  to={(targetPath as any)}
-                  href={(targetPath as any)}
+                  to={item.path}
                   onClick={() => setIsOpen(false)}
                   className="text-xl font-black text-slate-800 border-b border-slate-50 pb-4 flex justify-between items-center"
                 >
                   {item.name}
                   <div className="size-2 rounded-full bg-[#FFD500]" />
-                </LinkElem>
+                </Link>
               );
             })}
             <div className="mt-auto space-y-4">

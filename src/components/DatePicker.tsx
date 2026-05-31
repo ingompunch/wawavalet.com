@@ -1,18 +1,21 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Calendar as CalendarIcon, ChevronLeft, ChevronRight } from 'lucide-react';
+import { cn } from '../lib/utils';
 
 interface DatePickerProps {
   value: string;
   onChange: (date: string) => void;
   placeholder?: string;
   className?: string;
+  theme?: 'light' | 'dark';
 }
 
 export const DatePicker: React.FC<DatePickerProps> = ({
   value,
   onChange,
   placeholder = "연도-월-일",
-  className = ""
+  className = "",
+  theme = "light"
 }) => {
   const [isOpen, setIsOpen] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
@@ -31,10 +34,12 @@ export const DatePicker: React.FC<DatePickerProps> = ({
     };
   }, [isOpen]);
 
-  // Initialize view to the selected date or today
-  const initialDate = value ? new Date(value) : new Date();
-  const [viewYear, setViewYear] = useState(initialDate.getFullYear() || 2026);
-  const [viewMonth, setViewMonth] = useState(initialDate.getMonth() !== undefined ? initialDate.getMonth() : 4); // 0-indexed
+  // Initialize view to the selected date or today defensively
+  const parsedDate = value ? new Date(value) : null;
+  const isValid = parsedDate && !isNaN(parsedDate.getTime());
+  const initialDate = isValid ? parsedDate : new Date();
+  const [viewYear, setViewYear] = useState(initialDate.getFullYear());
+  const [viewMonth, setViewMonth] = useState(initialDate.getMonth()); // 0-indexed
 
   const weekDays = ["일", "월", "화", "수", "목", "금", "토"];
 
@@ -121,9 +126,17 @@ export const DatePicker: React.FC<DatePickerProps> = ({
       {/* Trigger Button */}
       <div
         onClick={() => setIsOpen(!isOpen)}
-        className="h-[46px] w-full bg-slate-50 border border-slate-100 rounded-xl flex items-center justify-between px-2.5 sm:px-4 focus-within:ring-2 focus-within:ring-[#FFD500] cursor-pointer hover:bg-slate-100/50 transition-colors"
+        className={cn(
+          "h-[46px] w-full rounded-xl flex items-center justify-between px-2.5 sm:px-4 focus-within:ring-2 focus-within:ring-[#FFD500] cursor-pointer transition-colors border",
+          theme === 'dark' 
+            ? "bg-slate-950 border-white/10 hover:bg-slate-900 text-white" 
+            : "bg-slate-50 border-slate-100 hover:bg-slate-100/50 text-slate-700"
+        )}
       >
-        <span className="font-bold text-xs sm:text-sm text-slate-700 whitespace-nowrap">
+        <span className={cn(
+          "font-bold text-xs sm:text-sm whitespace-nowrap",
+          theme === 'dark' ? "text-white" : "text-slate-700"
+        )}>
           {formattedDate || placeholder}
         </span>
         <CalendarIcon size={15} className="text-slate-400 shrink-0 ml-1" />
@@ -131,23 +144,37 @@ export const DatePicker: React.FC<DatePickerProps> = ({
 
       {/* Popover Calendar */}
       {isOpen && (
-        <div className="absolute top-[52px] left-0 z-50 bg-white border border-slate-100 rounded-2xl shadow-xl p-4 w-[290px] select-none">
+        <div className={cn(
+          "absolute top-[52px] left-0 z-50 border rounded-2xl shadow-xl p-4 w-[290px] select-none",
+          theme === 'dark'
+            ? "bg-[#1E1E1E] border-white/10 text-white shadow-black/60"
+            : "bg-white border-slate-100 text-slate-800 shadow-xl"
+        )}>
           {/* Header */}
           <div className="flex items-center justify-between mb-4">
             <button
               type="button"
               onClick={handlePrevMonth}
-              className="p-1 hover:bg-slate-100 rounded-lg text-slate-500 transition-colors"
+              className={cn(
+                "p-1 rounded-lg transition-colors",
+                theme === 'dark' ? "hover:bg-slate-800 text-slate-400" : "hover:bg-slate-100 text-slate-500"
+              )}
             >
               <ChevronLeft size={18} />
             </button>
-            <span className="font-bold text-sm text-slate-800">
+            <span className={cn(
+              "font-bold text-sm",
+              theme === 'dark' ? "text-white" : "text-slate-800"
+            )}>
               {viewYear}년 {viewMonth + 1}월
             </span>
             <button
               type="button"
               onClick={handleNextMonth}
-              className="p-1 hover:bg-slate-100 rounded-lg text-slate-500 transition-colors"
+              className={cn(
+                "p-1 rounded-lg transition-colors",
+                theme === 'dark' ? "hover:bg-slate-800 text-slate-400" : "hover:bg-slate-100 text-slate-500"
+              )}
             >
               <ChevronRight size={18} />
             </button>
@@ -181,12 +208,16 @@ export const DatePicker: React.FC<DatePickerProps> = ({
                   onClick={(e) => handleSelectDay(day.dateStr, e)}
                   className={`
                     h-8 w-8 rounded-lg text-xs font-semibold flex items-center justify-center transition-all cursor-pointer
-                    ${!day.isCurrentMonth ? "text-slate-300 font-normal" : "text-slate-700"}
+                    ${!day.isCurrentMonth ? "text-slate-500/60 font-normal" : theme === 'dark' ? "text-slate-300" : "text-slate-700"}
                     ${isSelected 
-                      ? "bg-slate-900 text-[#FFD500] font-bold shadow-sm" 
+                      ? "bg-[#FFD500] text-slate-900 font-bold shadow-sm animate-pulse-subtle" 
                       : isToday 
-                        ? "border border-slate-900 text-slate-900 font-bold" 
-                        : "hover:bg-slate-100"
+                        ? theme === 'dark' 
+                          ? "border border-[#FFD500] text-[#FFD500] font-bold" 
+                          : "border border-slate-900 text-slate-900 font-bold" 
+                        : theme === 'dark'
+                          ? "hover:bg-slate-800"
+                          : "hover:bg-slate-100"
                     }
                     ${day.isCurrentMonth && !isSelected && cellDayOfWeek === 0 ? "text-red-500" : ""}
                     ${day.isCurrentMonth && !isSelected && cellDayOfWeek === 6 ? "text-blue-500" : ""}

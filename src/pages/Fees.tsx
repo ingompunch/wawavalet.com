@@ -9,15 +9,9 @@ export const Fees = () => {
 
     if (loading) return null;
 
-    const outdoorBase = siteData.fees?.outdoorBasePrice ?? 40000;
-    const outdoorPlus = siteData.fees?.outdoorPlusDayPrice ?? 5000;
-    const indoorBase = siteData.fees?.indoorBasePrice ?? 40000;
-    const indoorPlus = siteData.fees?.indoorPlusDayPrice ?? 10000;
-
     const getPriceForDays = (type: 'outdoor' | 'indoor', dayCount: number) => {
-        const base = type === 'outdoor' ? outdoorBase : indoorBase;
-        const plus = type === 'outdoor' ? outdoorPlus : indoorPlus;
-        return dayCount <= 2 ? base : base + (dayCount - 2) * plus;
+        const rate = type === 'outdoor' ? 10000 : 20000;
+        return dayCount * rate;
     };
 
     return (
@@ -58,8 +52,8 @@ export const Fees = () => {
                                     ))}
                                     <tr className="bg-slate-50/40">
                                         <td className="p-4 border-r border-slate-100 font-black text-slate-500 text-xs">11일 이후 (1일당)</td>
-                                        <td className="p-4 border-r border-slate-100 font-black text-slate-400">+{formatPrice(outdoorPlus)}</td>
-                                        <td className="p-4 font-black text-blue-400">+{formatPrice(indoorPlus)}</td>
+                                        <td className="p-4 border-r border-slate-100 font-black text-slate-400">+{formatPrice(10000)}</td>
+                                        <td className="p-4 font-black text-blue-400">+{formatPrice(20000)}</td>
                                     </tr>
                                 </tbody>
                             </table>

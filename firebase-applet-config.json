@@ -1,10 +1,9 @@
 {
-  "projectId": "ferrous-terrain-465502-s0",
-  "appId": "1:304122810450:web:3641f24ea9f7e1b991cf8b",
-  "apiKey": "AIzaSyDNHyeY2cXXhY_S4XEUsXfSnWMFIQjqEHI",
-  "authDomain": "ferrous-terrain-465502-s0.firebaseapp.com",
-  "firestoreDatabaseId": "ai-studio-fc3ccc64-aa19-48f0-b17f-4266ae345365",
-  "storageBucket": "ferrous-terrain-465502-s0.firebasestorage.app",
-  "messagingSenderId": "304122810450",
-  "measurementId": ""
+  "projectId": "intense-clover-1tpfc",
+  "appId": "1:61679154880:web:4d77d0ea863833882f5f25",
+  "apiKey": "AIzaSyCe2y7wtcAEIVjZ9YNdX_0LFK_EoH0UWTw",
+  "authDomain": "intense-clover-1tpfc.firebaseapp.com",
+  "firestoreDatabaseId": "ai-studio-38340e4e-f8e7-4c6a-bc23-67a684103302",
+  "storageBucket": "intense-clover-1tpfc.firebasestorage.app",
+  "messagingSenderId": "61679154880"
 }
