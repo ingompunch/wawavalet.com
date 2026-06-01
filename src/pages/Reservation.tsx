@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { db, auth } from '../lib/firebase';
-import { collection, addDoc } from 'firebase/firestore';
+import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
 import { 
   Car, 
   User, 
@@ -341,12 +341,12 @@ export const Reservation = () => {
       carNumber: formData.carNumber,
       carModel: formData.carModel,
       parkingType: formData.parkingType,
-      departureDate: ensureYYYYMMDD(formData.entryDate),
+      entryDate: ensureYYYYMMDD(formData.entryDate),
       departureTime: finalEntryTimeStr,
       entryTerminal: formData.entryTerminal,
       entryAirline: formData.entryAirline,
       entryFlight: formData.entryFlight,
-      arrivalDate: ensureYYYYMMDD(formData.exitDate),
+      exitDate: ensureYYYYMMDD(formData.exitDate),
       arrivalTime: finalExitTimeStr,
       exitTerminal: formData.exitTerminal,
       exitAirline: formData.exitAirline,
@@ -355,9 +355,9 @@ export const Reservation = () => {
       notes: formData.notes,
       password: formData.password,
       totalPrice: totalPrice,
-      status: 'pending', // Set to 'pending' as requested by B2B dashboard
+      status: '입고예정', // Changed status back to '입고예정' (한글)
       companyId: 'wawa', // Store company identifier for routing
-      createdAt: new Date().toISOString(),
+      createdAt: serverTimestamp(),
     };
 
     try {

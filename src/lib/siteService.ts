@@ -134,7 +134,8 @@ export function useSiteData() {
       }
       setLoading(false);
     }, (error) => {
-      console.error("Site data fetch error:", error);
+      console.warn("Site data fetch error (falling back to initial site data):", error.message || error);
+      setData(INITIAL_SITE_DATA);
       setLoading(false);
     });
     return unsub;
