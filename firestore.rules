@@ -37,11 +37,12 @@ service cloud.firestore {
       allow write: if isAdmin();
     }
 
-    // Reservations: Public create, Admin read/write
+    // Reservations: Public create, Signed-in read/list, Admin update/delete
     match /reservations/{reservationId} {
       allow create: if isValidReservation(request.resource.data) && 
                       (request.resource.data.status == 'pending' || request.resource.data.status == '입고예정');
-      allow read, list, update, delete: if isAdmin();
+      allow read, list: if isSignedIn();
+      allow update, delete: if isAdmin();
     }
 
     // Admins: Only admins can manage admins
