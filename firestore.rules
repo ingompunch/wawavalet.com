@@ -23,11 +23,11 @@ service cloud.firestore {
     }
 
     function isValidReservation(data) {
-      return data.name is string && data.name.size() <= 150 &&
+      return (data.name is string || data.userName is string) &&
              data.phone is string && data.phone.size() <= 50 &&
              data.carNumber is string && data.carNumber.size() <= 50 &&
-             data.exitDate is string &&
-             data.entryDate is string &&
+             (data.exitDate is string || data.arrivalDate is string) &&
+             (data.entryDate is string || data.departureDate is string) &&
              data.status in ['pending', 'confirmed', 'cancelled', '입고예정', '입고완료', '출고완료', '취소'];
     }
 
