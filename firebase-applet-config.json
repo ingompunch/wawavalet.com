@@ -1,10 +1,9 @@
 {
-  "projectId": "intense-clover-1tpfc",
-  "appId": "1:304122810450:web:3641f24ea9f7e1b991cf8b",
-  "apiKey": "AIzaSyDNHyeY2cXXhY_S4XEUsXfSnWMFIQjqEHI",
-  "authDomain": "intense-clover-1tpfc.firebaseapp.com",
-  "firestoreDatabaseId": "ai-studio-38340e4e-f8e7-4c6a-bc23-67a684103302",
-  "storageBucket": "intense-clover-1tpfc.firebasestorage.app",
-  "messagingSenderId": "304122810450",
-  "measurementId": ""
+  "projectId": "airpick-reservation",
+  "appId": "1:417452643834:web:b42b0c3f863b3b7c370043",
+  "apiKey": "AIzaSyDbZyPUwzp166aX8PzDmoIzqER8bDV8tyo",
+  "authDomain": "airpick-reservation.firebaseapp.com",
+  "storageBucket": "airpick-reservation.firebasestorage.app",
+  "messagingSenderId": "417452643834",
+  "measurementId": "G-258VBKY6C2"
 }
