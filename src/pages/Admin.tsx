@@ -70,9 +70,9 @@ const INITIAL_SITE_DATA = {
     outdoorPlusDayPrice: 5000,
     indoorBasePrice: 40000,
     indoorPlusDayPrice: 10000,
-    surcharge: 10000,
-    surchargeStart: '20:00',
-    surchargeEnd: '04:00',
+    surcharge: 20000,
+    surchargeStart: '19:00',
+    surchargeEnd: '05:00',
   },
   faqs: [
     { 
@@ -651,7 +651,7 @@ export const Admin = () => {
                                                 <input 
                                                     type="number"
                                                     className="w-full bg-slate-50 border border-slate-100 rounded-2xl px-6 py-4 font-bold outline-none focus:ring-2 focus:ring-[#FFD500]"
-                                                    value={siteData.fees.surcharge ?? 10000}
+                                                    value={siteData.fees.surcharge ?? 20000}
                                                     onChange={(e) => setSiteData({
                                                         ...siteData, 
                                                         fees: {
@@ -666,7 +666,7 @@ export const Admin = () => {
                                                 <input 
                                                     type="time"
                                                     className="w-full bg-slate-50 border border-slate-100 rounded-2xl px-6 py-4 font-bold outline-none focus:ring-2 focus:ring-[#FFD500]"
-                                                    value={siteData.fees.surchargeStart ?? '20:00'}
+                                                    value={siteData.fees.surchargeStart ?? '19:00'}
                                                     onChange={(e) => setSiteData({
                                                         ...siteData, 
                                                         fees: {
@@ -681,7 +681,7 @@ export const Admin = () => {
                                                 <input 
                                                     type="time"
                                                     className="w-full bg-slate-50 border border-slate-100 rounded-2xl px-6 py-4 font-bold outline-none focus:ring-2 focus:ring-[#FFD500]"
-                                                    value={siteData.fees.surchargeEnd ?? '04:00'}
+                                                    value={siteData.fees.surchargeEnd ?? '05:00'}
                                                     onChange={(e) => setSiteData({
                                                         ...siteData, 
                                                         fees: {

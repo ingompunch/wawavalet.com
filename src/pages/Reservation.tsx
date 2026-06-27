@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { db, auth } from '../lib/firebase';
 import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
+import { signInAnonymously } from 'firebase/auth';
 import { 
   Car, 
   User, 
@@ -71,6 +72,7 @@ export const Reservation = () => {
     carNumber: '',
     carModel: '',
     parkingType: 'indoor' as 'indoor' | 'outdoor',
+    paymentMethod: 'unpaid' as 'unpaid',
     
     // Departure (Departure timing & Details)
     entryDate: '',
@@ -108,6 +110,7 @@ export const Reservation = () => {
   // Submit states
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
+  const [submitError, setSubmitError] = useState<string | null>(null);
 
   // Helper code to handle Firestore specific errors with JSON structured reports
   const handleFirestoreError = (error: unknown, operationType: OperationType, path: string | null) => {
@@ -142,10 +145,11 @@ export const Reservation = () => {
     return hour;
   };
 
-  // Surcharge checking logic (Before 05:00 AM or after 19:00 PM)
-  const checkSurcharge = (ampm: string, hourStr: string) => {
+  // Surcharge checking logic (야간 할증 10,000원 (19:00~05:00 입·출고 시))
+  const checkSurcharge = (ampm: string, hourStr: string, minStr: string) => {
     const hour24 = convertTo24Hour(ampm, hourStr);
-    return hour24 < 5 || hour24 >= 19; // 05:00 is excluded, so < 5 hits 00, 01, 02, 03, 04
+    // 19:00 to 05:00 (hour24 >= 19 || hour24 < 5)
+    return hour24 >= 19 || hour24 < 5;
   };
 
   // Load and prefill state from Home Page Quick Calculator if available
@@ -246,32 +250,31 @@ export const Reservation = () => {
     if (diffDays < 1) diffDays = 1; // Minimum is 1 day
 
     // Rates calculation as per spec:
-    // [실외 주차 요금] 1~2일은 기본요금 40,000원 고정. 3일째부터 하루당 5,000원씩 누적 합산
-    // [실내 주차 요금] 1~2일은 기본요금 40,000원 고정. 3일째부터 하루당 10,000원씩 누적 합산
-    let calculatedBaseFee = 0;
-    if (formData.parkingType === 'outdoor') {
-      if (diffDays <= 2) {
-        calculatedBaseFee = 40000;
+    // 기본요금 40,000원은 입차일~출차일 포함 2일까지 커버, 3일째부터 가산.
+    // 야외: 3일째부터 하루당 +5,000원 누적 합산
+    // 실내: 3일째부터 하루당 +10,000원 누적 합산
+    let calculatedBaseFee = 40000;
+    if (diffDays > 2) {
+      const extraDays = diffDays - 2;
+      if (formData.parkingType === 'outdoor') {
+        calculatedBaseFee += extraDays * 5000;
       } else {
-        calculatedBaseFee = 40000 + (diffDays - 2) * 5000;
-      }
-    } else {
-      if (diffDays <= 2) {
-        calculatedBaseFee = 40000;
-      } else {
-        calculatedBaseFee = 40000 + (diffDays - 2) * 10000;
+        calculatedBaseFee += extraDays * 10000;
       }
     }
 
-    // Checking entry / exit surcharges
-    const isEntrySurcharged = checkSurcharge(formData.entryAmPm, formData.entryHour);
-    const isExitSurcharged = checkSurcharge(formData.exitAmPm, formData.exitHour);
+    // Checking entry / exit surcharges (야간 할증 10,000원 (19:00~05:00 입·출고 시))
+    const isEntrySurcharged = checkSurcharge(formData.entryAmPm, formData.entryHour, formData.entryMin);
+    const isExitSurcharged = checkSurcharge(formData.exitAmPm, formData.exitHour, formData.exitMin);
 
     setEntrySurchargeApplied(isEntrySurcharged);
     setExitSurchargeApplied(isExitSurcharged);
 
-    // Apply flat 20,000 won if either or both are in surcharged range
-    if (isEntrySurcharged || isExitSurcharged) {
+    // 20,000 won added for each surcharge applied
+    if (isEntrySurcharged) {
+      calculatedBaseFee += 20000;
+    }
+    if (isExitSurcharged) {
       calculatedBaseFee += 20000;
     }
 
@@ -336,36 +339,73 @@ export const Reservation = () => {
     };
 
     const submissionPayload = {
-      name: formData.name,
+      // 1. Required fields from the new specification
+      companyId: 'wawa',
+      status: 'pending',
+      createdAt: new Date().toISOString(),
+      
+      // Customer Info
+      userName: formData.name,
       phone: formData.phone,
       carNumber: formData.carNumber,
       carModel: formData.carModel,
+      
+      // Schedule Info
+      departureDate: ensureYYYYMMDD(formData.entryDate),
+      departureTime: finalEntryTimeStr,
+      arrivalDate: ensureYYYYMMDD(formData.exitDate),
+      arrivalTime: finalExitTimeStr,
+      departureTerminal: formData.entryTerminal,
+      isIndoor: formData.parkingType === 'indoor',
+      
+      // Pricing & Payment
+      totalPrice: totalPrice,
+      paymentMethod: 'unpaid',
+
+      // 2. Original fields (backward compatibility/safety)
+      name: formData.name,
       parkingType: formData.parkingType,
       entryDate: ensureYYYYMMDD(formData.entryDate),
-      departureTime: finalEntryTimeStr,
       entryTerminal: formData.entryTerminal,
       entryAirline: formData.entryAirline,
       entryFlight: formData.entryFlight,
       exitDate: ensureYYYYMMDD(formData.exitDate),
-      arrivalTime: finalExitTimeStr,
       exitTerminal: formData.exitTerminal,
       exitAirline: formData.exitAirline,
       exitFlight: formData.exitFlight,
       destination: formData.destination,
       notes: formData.notes,
       password: formData.password,
-      totalPrice: totalPrice,
-      status: '입고예정', // Changed status back to '입고예정' (한글)
-      companyId: 'wawa', // Store company identifier for routing
-      createdAt: serverTimestamp(),
     };
 
     try {
+      setSubmitError(null);
+      // Try anonymous authentication, but proceed anyway if it is not enabled in Firebase Console
+      try {
+        await signInAnonymously(auth);
+      } catch (authErr) {
+        console.warn('Anonymous authentication could not be completed, proceeding as guest:', authErr);
+      }
       await addDoc(collection(db, reservationsCol), submissionPayload);
       setIsSuccess(true);
       window.scrollTo(0, 0);
     } catch (error) {
-      handleFirestoreError(error, OperationType.WRITE, reservationsCol);
+      console.error('Reservation submission error:', error);
+      // Generate standard user-facing error message
+      let msg = '예약 신청 중 오류가 발생했습니다. 네트워크 연결을 확인하고 잠시 후 다시 시도해 주세요.';
+      if (error instanceof Error) {
+        if (error.message.includes('permission-denied')) {
+          msg = '예약 권한이 거부되었습니다. 필수 약관에 모두 동의하셨는지 확인해 주세요.';
+        } else {
+          msg = `예약 실패: ${error.message}`;
+        }
+      }
+      setSubmitError(msg);
+      try {
+        handleFirestoreError(error, OperationType.WRITE, reservationsCol);
+      } catch (err) {
+        // Log details but don't crash
+      }
     } finally {
       setIsSubmitting(false);
     }
@@ -484,7 +524,7 @@ export const Reservation = () => {
                 </button>
               </div>
             </div>
-            
+
             {/* 1. Customer Personal & Vehicle Particulars */}
             <div className="bg-[#1E1E1E] p-6 md:p-8 rounded-[2rem] border border-white/10 space-y-6 shadow-xl shadow-black/10">
               <div className="flex items-center gap-2 border-b border-white/5 pb-4">
@@ -850,10 +890,10 @@ export const Reservation = () => {
                   
                   <p className="font-extrabold text-white text-xs mt-2">제 2조 (서비스 요금)</p>
                   <p>달력 날짜 칸수 기준 요금 (입출차 시간 무관, '출차일 - 입차일 + 1'이 최종 일수)</p>
-                  <p>1) 실외 주차 요금: 1~2일 기본요금 40,000원 고정, 3일째부터 하루당 5,000원씩 누적 합산</p>
-                  <p>2) 실내 주차 요금: 1~2일 기본요금 40,000원 고정, 3일째부터 하루당 10,000원씩 누적 합산</p>
+                  <p>1) 실외 주차 요금: 1~2일 기본요금 40,000원, 3일째부터 하루당 5,000원씩 누적 합산</p>
+                  <p>2) 실내 주차 요금: 1~2일 기본요금 40,000원, 3일째부터 하루당 10,000원씩 누적 합산</p>
                   
-                  <p className="font-extrabold text-[#FFD500] text-[11px] mt-1">• 새벽/야간 할증: 입차 또는 출차 시간 중 하나라도 오후 19시~새벽 04시 59분(05시 정각 제외) 사이에 해당 시 총액에 20,000원이 한 번만 할증 적용됩니다.</p>
+                  <p className="font-extrabold text-[#FFD500] text-[11px] mt-1">• 새벽/야간 할증: 입차 또는 출차 시간 중 하나라도 19:00 ~ 05:00 사이에 해당 시 각각 20,000원씩 할증 적용됩니다.</p>
 
                   <p className="font-extrabold text-white text-xs mt-2">제 3조 (귀책사유 및 보험 보상 범위)</p>
                   <p>① 당사의 서비스제공 기간 중 당사직원의 고의 또는 과실로 인하여 발생한 차량 손해에 대해 손해 전액을 배상하며 단 차량인도 인도 후에는 차량손해에 대해 책임지지 않는다.</p>
@@ -916,7 +956,7 @@ export const Reservation = () => {
                 <div className="flex justify-between items-center">
                   <span className="text-slate-400">주차 유형</span>
                   <span className="font-extrabold text-[#FFD500]">
-                    {formData.parkingType === 'indoor' ? '실내 주차 (1~2일 기본 4만원 / 3일~ +1만원)' : '야외 주차 (1~2일 기본 4만원 / 3일~ +5천원)'}
+                    {formData.parkingType === 'indoor' ? '실내 주차 (1~2일 기본 4만원 / 3일째부터 +1만원)' : '야외 주차 (1~2일 기본 4만원 / 3일째부터 +5천원)'}
                   </span>
                 </div>
                 <div className="flex justify-between items-center">
@@ -930,10 +970,18 @@ export const Reservation = () => {
                 {daysCount !== null && (entrySurchargeApplied || exitSurchargeApplied) && (
                   <div className="bg-white/5 p-3 rounded-xl border border-white/10 space-y-2 mt-2">
                     <span className="text-[10px] font-black tracking-widest text-[#FFD500] block">추가 할증 요금 내역</span>
-                    <div className="flex justify-between items-center text-[11px]">
-                      <span className="text-slate-300">야간/새벽 할증 (19:00 ~ 04:59)</span>
-                      <span className="font-bold text-[#FFD500]">+20,000원</span>
-                    </div>
+                    {entrySurchargeApplied && (
+                      <div className="flex justify-between items-center text-[11px]">
+                        <span className="text-slate-300">야간 입고 할증 (19:00 ~ 05:00)</span>
+                        <span className="font-bold text-[#FFD500]">+20,000원</span>
+                      </div>
+                    )}
+                    {exitSurchargeApplied && (
+                      <div className="flex justify-between items-center text-[11px]">
+                        <span className="text-slate-300">야간 출고 할증 (19:00 ~ 05:00)</span>
+                        <span className="font-bold text-[#FFD500]">+20,000원</span>
+                      </div>
+                    )}
                   </div>
                 )}
               </div>
@@ -946,10 +994,21 @@ export const Reservation = () => {
                 </div>
                 {daysCount !== null && (
                   <p className="text-[11px] text-slate-400 font-bold mt-1 pl-0.5">
-                    ({formData.parkingType === 'indoor' ? '실내' : '실외'} {daysCount}일 기준 정산)
+                    ({formData.parkingType === 'indoor' ? '실내' : '실외'} {daysCount}일 기준 정산, 현장 결제)
                   </p>
                 )}
               </div>
+
+              {/* Submission Error Banner */}
+              {submitError && (
+                <div role="alert" className="mb-6 p-4 bg-red-505/10 bg-red-950/40 border border-red-500/30 rounded-2xl flex items-start gap-2.5 text-xs font-semibold text-red-200 transition-all">
+                  <AlertCircle size={16} className="text-red-500 shrink-0 mt-0.5" />
+                  <div className="space-y-1">
+                    <p className="font-bold text-red-400">예약 처리 에러</p>
+                    <p className="leading-relaxed text-[11px]">{submitError}</p>
+                  </div>
+                </div>
+              )}
 
               {/* Submit trigger button strictly validated & synchronized */}
               <button 

@@ -47,8 +47,12 @@ export const Home = () => {
             return;
         }
 
-        const entryHour = parseInt(entryTime.split(':')[0], 10);
-        const exitHour = parseInt(exitTime.split(':')[0], 10);
+        const entryParts = entryTime.split(':').map(Number);
+        const exitParts = exitTime.split(':').map(Number);
+        const entryHour = entryParts[0];
+        const entryMin = entryParts[1] || 0;
+        const exitHour = exitParts[0];
+        const exitMin = exitParts[1] || 0;
 
         const d1 = new Date(startParts[0], startParts[1] - 1, startParts[2]);
         const d2 = new Date(endParts[0], endParts[1] - 1, endParts[2]);
@@ -57,27 +61,32 @@ export const Home = () => {
         if (diffDays < 1) diffDays = 1; // Minimum is 1 day
         
         if (siteData) {
-            // Rates calculation as per spec:
-            // [실외 주차 요금] 1~2일은 기본요금 40,000원 고정. 3일째부터 하루당 5,000원씩 누적 합산
-            // [실내 주차 요금] 1~2일은 기본요금 40,000원 고정. 3일째부터 하루당 10,000원씩 누적 합산
-            let price = 0;
-            if (parkingType === 'outdoor') {
-                if (diffDays <= 2) {
-                    price = 40000;
+            // Rates calculation as per spec (wawavalet.com):
+            // 기본요금 40,000원은 입차일~출차일 포함 2일까지 커버, 3일째부터 가산.
+            // 야외: 3일째부터 하루당 +5,000원 누적 합산
+            // 실내: 3일째부터 하루당 +10,000원 누적 합산
+            let price = 40000;
+            if (diffDays > 2) {
+                const extraDays = diffDays - 2;
+                if (parkingType === 'outdoor') {
+                    price += extraDays * 5000;
                 } else {
-                    price = 40000 + (diffDays - 2) * 5000;
-                }
-            } else {
-                if (diffDays <= 2) {
-                    price = 40000;
-                } else {
-                    price = 40000 + (diffDays - 2) * 10000;
+                    price += extraDays * 10000;
                 }
             }
 
-            // 새벽/야간 할증: 입차 시간 또는 출차 시간 중 하나라도 오후 19시이후 혹은 새벽 05시 이전(05시 정각 제외)에 해당하면 2만원 추가
-            const hasSurcharge = (entryHour < 5 || entryHour >= 19 || exitHour < 5 || exitHour >= 19);
-            if (hasSurcharge) {
+            // 야간 할증 20,000원 (19:00~05:00 입·출고 시)
+            const checkSurchargeHour = (hour24: number, min: number) => {
+                return hour24 >= 19 || hour24 < 5;
+            };
+
+            const isEntrySurcharged = checkSurchargeHour(entryHour, entryMin);
+            const isExitSurcharged = checkSurchargeHour(exitHour, exitMin);
+
+            if (isEntrySurcharged) {
+                price += 20000;
+            }
+            if (isExitSurcharged) {
                 price += 20000;
             }
 

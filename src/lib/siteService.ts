@@ -45,9 +45,9 @@ export const INITIAL_SITE_DATA = {
     outdoorPlusDayPrice: 5000,
     indoorBasePrice: 40000,
     indoorPlusDayPrice: 10000,
-    surcharge: 10000,
-    surchargeStart: '20:00',
-    surchargeEnd: '04:00',
+    surcharge: 20000,
+    surchargeStart: '19:00',
+    surchargeEnd: '05:00',
   },
   faqs: [
     { 
